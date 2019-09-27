@@ -1,5 +1,5 @@
-{
-  "data": {
+export const data = [
+   {
     "continents": [
       {
         "name": "Africa",
@@ -144,4 +144,4 @@
       }
     ]
   }
-}
+];
