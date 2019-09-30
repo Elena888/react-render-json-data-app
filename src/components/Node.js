@@ -1,6 +1,9 @@
 import React, {Component} from 'react'
 
 class Node extends Component{
+    clickHandler = (e) => {
+        console.log(e.target)
+    };
     render(){
         let childnodes = null;
 
@@ -15,7 +18,7 @@ class Node extends Component{
 
         return (
             <li>
-                <span>{this.props.node.name !== null ? this.props.node.name : this.props.node.code}</span>
+                <span onClick={(e) => this.clickHandler(e)}>{this.props.node.name !== null ? this.props.node.name : this.props.node.code}</span>
                 { childnodes ?
                     <ul className="display-none">{childnodes}</ul>
                     : null }

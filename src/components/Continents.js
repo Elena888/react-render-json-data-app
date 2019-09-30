@@ -6,6 +6,7 @@ class Continents extends React.Component {
 
     render() {
         let nodes = data.map(function(item) {
+            console.log(item)
             return (
                 <Node key="continents" node={item.continents} children={item.continents} />
             );

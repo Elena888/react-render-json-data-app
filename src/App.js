@@ -1,10 +1,12 @@
+
 import ApolloClient from 'apollo-boost';
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import Header from './components/Header'
 import Continents from './components/Continents';
 import gql from 'graphql-tag';
 import {Query} from 'react-apollo';
-import {data} from "./test";
+//import {data} from "./test";
 import './style.css'
 
 
@@ -31,81 +33,73 @@ const GET_COUNTRIES = gql`
   }
 `;
 
-/*class ListItem extends React.Component {
-    //Add this
-    constructor (){
-        super(...arguments);
-        this.state = { showChild:false};
-    }
-
-    handleCollapse(){
-        console.log('Open/Close: ' + this.props.item.display_name);
-        //Add this
-        this.setState({showChild:!this.state.showChild});
-        return false;
-    }
-
-    handleFilter(){
-        console.log('Filter id: ' + this.props.item.id);
-        return false;
-    }
-
-    render(){
-        let children;
-        if(this.state.showChild) {
-            children = (<List list={this.props.item.children} />);
-        }
-
-        return (
-            <div>
-                <a rel="{this.props.item.id}" onClick={this.handleCollapse.bind(this)}>
-                    {this.props.item.display_name}
-                </a>
-                <input value="" type="checkbox" onClick={this.handleFilter.bind(this)} />
-                //Add this
-                {children}
-            </div>
-        )
-    };
-}*/
-
-
 class App extends React.Component {
-
     renderItems = (list) => {
-        const display = list.map(el => {
+        return list.map((el) => {
             let value, next;
-            value = el.name;
+            value = el.name ? el.name : el.code;
 
             let test = Object.values(el).find(el => Array.isArray(el));
-            console.log(test)
-            if(test){
+            if (test) {
                 next = this.renderItems(test)
             }
-            return(
-                <li>
-                    {value}
-                    {next}
-                </li>
-
+            return (
+                <ul key={value + el.__typename}>
+                    <li key={value}>
+                        <span onClick={(e) => this.clickHandler(e)}>{value}</span>
+                        {next}
+                    </li>
+                </ul>
             )
         });
-        return(
-            <ul>
-                {display}
-            </ul>
-        )
+    };
+    clickHandler = (e) => {
+        let ulList = e.target.parentElement.childNodes;
+        if(ulList){
+            ulList.forEach(function(el) {
+                if(el.tagName.toLowerCase() === "ul") {
+                    el.classList.toggle('display-none');
+                    if(el.childNodes){
+                        el.childNodes.forEach(function (elInner) {
+                            elInner.querySelectorAll('ul').forEach(function (ul) {
+                                ul.classList.add('display-none');
+                            })
+                        })
+                    }
+                }
+            });
+        }
+    };
+
+    componentDidMount(){
+        this.handleLoad();
+    }
+    handleLoad = () => {
+        console.log(document.querySelectorAll('.continents ul li ul'))
+        document.querySelectorAll('.continents ul li ul').forEach(function(el){
+            el.classList.add('display-none')
+        })
     };
 
     render() {
-
         return (
             <div>
-               {/* <Header/>
-                <Continents/>*/}
+                <Header/>
+                {/* <Continents/>**/}
+                <Query query={GET_COUNTRIES} client={client}>
+                    {({loading, error, data}) => {
+                        if (loading) return <p>Loading...</p>;
+                        if (error) return <p>{error.message}</p>;
+                        if(data){
+                            return (
+                                <div className="continents">
+                                    {this.renderItems(data.continents)}
+                                </div>
+                            );
+                        }
+                    }}
 
-                {this.renderItems(data)}
-               
+                </Query>
             </div>
         );
     }

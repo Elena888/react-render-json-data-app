@@ -46,7 +46,7 @@ class App extends Component{
                     if (loading) return <p>Loading...</p>;
                     if (error) return <p>{error.message}</p>;
                     return (
-                       <h1>Hello</h1>
+                        <h1>Hello</h1>
                     );
                 }}
             </Query>
