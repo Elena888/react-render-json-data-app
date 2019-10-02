@@ -129,6 +129,19 @@ export const data = [
               {
                 "code": "hy",
                 "name": "Armenian",
+                  "languages": [
+                      {
+                          "code": "hy",
+                          "name": "Armenian",
+
+                          "__typename": "Language"
+                      },
+                      {
+                          "code": "ru",
+                          "name": "Russian",
+                          "__typename": "Language"
+                      }
+                  ],
                 "__typename": "Language"
               },
               {
